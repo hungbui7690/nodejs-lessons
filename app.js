@@ -6,10 +6,11 @@ const Joi = require('joi')
 // Data
 ///////////////////////////////////////
 
-const genres = [
-  { id: 1, name: 'Action' },
-  { id: 2, name: 'Horror' },
-  { id: 3, name: 'Romance' },
+const courses = [
+  { id: 1, name: 'course 1' },
+  { id: 2, name: 'course 2' },
+  { id: 3, name: 'course 3' },
+  { id: 4, name: 'course 4' },
 ]
 
 ///////////////////////////////////////
@@ -18,26 +19,44 @@ const genres = [
 
 app.use(express.json())
 
-// Get All Genres
-app.get('/api/genres', (req, res) => {
-  res.send(genres)
+app.get('/', (req, res) => {
+  res.send('Course API')
 })
 
-// Get Genre by ID
-app.get('/api/genres/:id', (req, res) => {
-  const genreID = req.params.id
+// Get All Courses
+app.get('/api/courses', (req, res) => {
+  res.send(courses)
+})
 
-  const genre = genres.find((c) => c.id === Number(genreID))
-  if (!genre)
+// Middleware:
+// - have next param
+// - we need to call next() to pass control to next middleware > otherwise, hanging...
+// - affect all routes below this middleware
+app.use((req, res, next) => {
+  console.log('Logging...')
+  next()
+})
+
+app.use((req, res, next) => {
+  console.log('Authenticating...')
+  next()
+})
+
+// Get Course by ID
+app.get('/api/courses/:id', (req, res) => {
+  const courseID = req.params.id
+
+  const course = courses.find((c) => c.id === Number(courseID))
+  if (!course)
     return res
       .status(404)
-      .send(`The genre with the ID ${genreID} does not exist`)
+      .send(`The course with the ID ${courseID} does not exist`)
 
-  res.status(200).send(genre)
+  res.status(200).send(course)
 })
 
-// Create Genre
-app.post('/api/genres', (req, res) => {
+// Create Course
+app.post('/api/courses', (req, res) => {
   const result = validateCourse(req.body)
 
   if (result.error) {
@@ -45,23 +64,23 @@ app.post('/api/genres', (req, res) => {
     return res.status(400).send(message)
   }
 
-  const genre = {
-    id: genres.length + 1,
+  const course = {
+    id: courses.length + 1,
     name: req.body.name,
   }
 
-  genres.push(genre)
-  res.status(201).send(genre)
+  courses.push(course)
+  res.status(201).send(course)
 })
 
-// Update Genre
-app.put('/api/genres/:id', (req, res) => {
-  const genreID = req.params.id
-  const genre = genres.find((c) => c.id === Number(genreID))
-  if (!genre)
+// Update Course
+app.put('/api/courses/:id', (req, res) => {
+  const courseID = req.params.id
+  const course = courses.find((c) => c.id === Number(courseID))
+  if (!course)
     return res
       .status(400)
-      .send(`The course with the ID ${genre} does not exist`)
+      .send(`The course with the ID ${courseID} does not exist`)
 
   const result = validateCourse(req.body)
   if (result.error) {
@@ -69,23 +88,23 @@ app.put('/api/genres/:id', (req, res) => {
     return res.status(400).send(message)
   }
 
-  genre.name = req.body.name
-  res.send(genre)
+  course.name = req.body.name
+  res.send(course)
 })
 
-// Delete Genre
-app.delete('/api/genres/:id', (req, res) => {
-  const genreID = req.params.id
-  const genre = genres.find((c) => c.id === Number(genreID))
-  if (!genre)
+// Delete Course
+app.delete('/api/courses/:id', (req, res) => {
+  const courseID = req.params.id
+  const course = courses.find((c) => c.id === Number(courseID))
+  if (!course)
     return res
       .status(400)
-      .send(`The course with the ID ${genreID} does not exist`)
+      .send(`The course with the ID ${courseID} does not exist`)
 
-  const index = genres.indexOf(genre)
-  genres.slice(index, 1)
+  const index = courses.indexOf(course)
+  courses.slice(index, 1)
 
-  res.status(200).send(genre)
+  res.status(200).send(course)
 })
 
 function validateCourse(course) {
@@ -99,7 +118,6 @@ function validateCourse(course) {
 // SERVER
 ///////////////////////////////////////////////////
 
-// setup port in env > export PORT=5000
 const port = process.env.PORT || 3000
 
 app.listen(3000, () => console.log(`Listening on port ${port}...`))
