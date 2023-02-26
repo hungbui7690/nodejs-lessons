@@ -21,6 +21,19 @@ const courses = [
 
 app.use(express.json())
 
+// body-parser is deprecated > need to have options extends=true/false to use different parser
+// check pictures
+app.use(express.urlencoded({ extended: false }))
+
+// we can access http://localhost:3000/readme.txt to see the content of the file
+app.use(express.static('public'))
+
+app.use(logger)
+app.use((req, res, next) => {
+  console.log('Authenticating...')
+  next()
+})
+
 app.get('/', (req, res) => {
   res.send('Course API')
 })
@@ -28,14 +41,6 @@ app.get('/', (req, res) => {
 // Get All Courses
 app.get('/api/courses', (req, res) => {
   res.send(courses)
-})
-
-// *** use middleware logger here
-app.use(logger)
-
-app.use((req, res, next) => {
-  console.log('Authenticating...')
-  next()
 })
 
 // Get Course by ID
