@@ -6,11 +6,10 @@ const Joi = require('joi')
 // Data
 ///////////////////////////////////////
 
-const courses = [
-  { id: 1, name: 'course 1' },
-  { id: 2, name: 'course 2' },
-  { id: 3, name: 'course 3' },
-  { id: 4, name: 'course 4' },
+const genres = [
+  { id: 1, name: 'Action' },
+  { id: 2, name: 'Horror' },
+  { id: 3, name: 'Romance' },
 ]
 
 ///////////////////////////////////////
@@ -19,30 +18,26 @@ const courses = [
 
 app.use(express.json())
 
-app.get('/', (req, res) => {
-  res.send('Hello World')
+// Get All Genres
+app.get('/api/genres', (req, res) => {
+  res.send(genres)
 })
 
-// Get All Courses
-app.get('/api/courses', (req, res) => {
-  res.send(courses)
-})
+// Get Genre by ID
+app.get('/api/genres/:id', (req, res) => {
+  const genreID = req.params.id
 
-// Get Course by ID
-app.get('/api/courses/:id', (req, res) => {
-  const courseID = req.params.id
-
-  const course = courses.find((c) => c.id === Number(courseID))
-  if (!course)
+  const genre = genres.find((c) => c.id === Number(genreID))
+  if (!genre)
     return res
       .status(404)
-      .send(`The course with the ID ${courseID} does not exist`)
+      .send(`The genre with the ID ${genreID} does not exist`)
 
-  res.status(200).send(course)
+  res.status(200).send(genre)
 })
 
-// Create Course
-app.post('/api/courses', (req, res) => {
+// Create Genre
+app.post('/api/genres', (req, res) => {
   const result = validateCourse(req.body)
 
   if (result.error) {
@@ -50,23 +45,23 @@ app.post('/api/courses', (req, res) => {
     return res.status(400).send(message)
   }
 
-  const course = {
-    id: courses.length + 1,
+  const genre = {
+    id: genres.length + 1,
     name: req.body.name,
   }
 
-  courses.push(course)
-  res.status(201).send(course)
+  genres.push(genre)
+  res.status(201).send(genre)
 })
 
-// Update Course
-app.put('/api/courses/:id', (req, res) => {
-  const courseID = req.params.id
-  const course = courses.find((c) => c.id === Number(courseID))
-  if (!course)
+// Update Genre
+app.put('/api/genres/:id', (req, res) => {
+  const genreID = req.params.id
+  const genre = genres.find((c) => c.id === Number(genreID))
+  if (!genre)
     return res
       .status(400)
-      .send(`The course with the ID ${courseID} does not exist`)
+      .send(`The course with the ID ${genre} does not exist`)
 
   const result = validateCourse(req.body)
   if (result.error) {
@@ -74,23 +69,23 @@ app.put('/api/courses/:id', (req, res) => {
     return res.status(400).send(message)
   }
 
-  course.name = req.body.name
-  res.send(course)
+  genre.name = req.body.name
+  res.send(genre)
 })
 
-// Handling DELETE request > does not need req.body
-app.delete('/api/courses/:id', (req, res) => {
-  const courseID = req.params.id
-  const course = courses.find((c) => c.id === Number(courseID))
-  if (!course)
+// Delete Genre
+app.delete('/api/genres/:id', (req, res) => {
+  const genreID = req.params.id
+  const genre = genres.find((c) => c.id === Number(genreID))
+  if (!genre)
     return res
       .status(400)
-      .send(`The course with the ID ${courseID} does not exist`)
+      .send(`The course with the ID ${genreID} does not exist`)
 
-  const index = courses.indexOf(course)
-  courses.slice(index, 1)
+  const index = genres.indexOf(genre)
+  genres.slice(index, 1)
 
-  res.status(200).send(course)
+  res.status(200).send(genre)
 })
 
 function validateCourse(course) {
