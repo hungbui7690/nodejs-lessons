@@ -1,6 +1,8 @@
 const express = require('express')
 const app = express()
 const Joi = require('joi')
+const helmet = require('helmet')
+const morgan = require('morgan')
 
 const logger = require('./logger')
 
@@ -20,13 +22,11 @@ const courses = [
 ///////////////////////////////////////
 
 app.use(express.json())
-
-// body-parser is deprecated > need to have options extends=true/false to use different parser
-// check pictures
 app.use(express.urlencoded({ extended: false }))
-
-// we can access http://localhost:3000/readme.txt to see the content of the file
 app.use(express.static('public'))
+
+app.use(helmet())
+app.use(morgan('tiny'))
 
 app.use(logger)
 app.use((req, res, next) => {
