@@ -5,6 +5,10 @@ const helmet = require('helmet')
 const morgan = require('morgan')
 const config = require('config')
 
+// DEBUGGER
+const startupDebugger = require('debug')('app:startup')
+const dbDebugger = require('debug')('app:db')
+
 const logger = require('./logger')
 
 ///////////////////////////////////////
@@ -29,13 +33,17 @@ app.use(helmet())
 app.use(morgan('tiny'))
 
 console.log(`Environment : ${config.get('name')}`)
-/////////////////////////////////////////
-// === Config ===
-// file name must be correct: custom-environment-variables.json
-// > export NODE_ENV=production
-// > export app_password=12345
-/////////////////////////////////////////
 console.log(`Password : ${config.get('mail.password')}`)
+
+// DEBUGGER
+// export DEBUG=app:db
+// export DEBUG=
+// export DEBUG=app:db,app:startup
+// export DEBUG=app:*
+// export DEBUG=app:* nodemon app.js
+// > with this, we don't have to comment or clear the debugger like when we use console.log() after we finish debug
+dbDebugger('connected to DB...')
+startupDebugger('startup Debug...')
 
 app.use(logger)
 app.use((req, res, next) => {
