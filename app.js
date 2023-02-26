@@ -2,6 +2,8 @@ const express = require('express')
 const app = express()
 const Joi = require('joi')
 
+const logger = require('./logger')
+
 ///////////////////////////////////////
 // Data
 ///////////////////////////////////////
@@ -28,14 +30,8 @@ app.get('/api/courses', (req, res) => {
   res.send(courses)
 })
 
-// Middleware:
-// - have next param
-// - we need to call next() to pass control to next middleware > otherwise, hanging...
-// - affect all routes below this middleware
-app.use((req, res, next) => {
-  console.log('Logging...')
-  next()
-})
+// *** use middleware logger here
+app.use(logger)
 
 app.use((req, res, next) => {
   console.log('Authenticating...')
