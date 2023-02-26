@@ -26,10 +26,12 @@ app.use(express.urlencoded({ extended: false }))
 app.use(express.static('public'))
 
 app.use(helmet())
-app.use(morgan('tiny'))
 
-console.log(`NODE_ENV: ${process.env.NODE_ENV}`) // default = undefined
-console.log(`app: ${app.get('env')}`) // default = development
+// export NODE_ENV=production
+if (app.get('env') === 'development') {
+  app.use(morgan('tiny'))
+  console.log('Morgan enabled...')
+}
 
 app.use(logger)
 app.use((req, res, next) => {
