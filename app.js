@@ -28,6 +28,9 @@ app.use(express.static('public'))
 app.use(helmet())
 app.use(morgan('tiny'))
 
+console.log(`NODE_ENV: ${process.env.NODE_ENV}`) // default = undefined
+console.log(`app: ${app.get('env')}`) // default = development
+
 app.use(logger)
 app.use((req, res, next) => {
   console.log('Authenticating...')
