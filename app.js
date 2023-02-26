@@ -43,16 +43,8 @@ app.get('/api/courses/:id', (req, res) => {
 
 // Create Course
 app.post('/api/courses', (req, res) => {
-  // 1.
-  const schema = Joi.object({
-    name: Joi.string().min(3).max(100).required(),
-  })
+  const result = validateCourse(req.body)
 
-  // 2.
-  const result = schema.validate(req.body)
-  console.log(result)
-
-  // 3. return message if there are any errors
   if (result.error) {
     const { message } = result.error.details[0]
     return res.status(400).send(message)
@@ -66,6 +58,32 @@ app.post('/api/courses', (req, res) => {
   courses.push(course)
   res.status(201).send(course)
 })
+
+// Handling PUT request
+app.put('/api/courses/:id', (req, res) => {
+  const courseID = req.params.id
+  const course = courses.find((c) => c.id === Number(courseID))
+  if (!course)
+    return res
+      .status(400)
+      .send(`The course with the ID ${courseID} does not exist`)
+
+  const result = validateCourse(req.body)
+  if (result.error) {
+    const { message } = result.error.details[0]
+    return res.status(400).send(message)
+  }
+
+  course.name = req.body.name
+  res.send(course)
+})
+
+function validateCourse(course) {
+  const schema = Joi.object({
+    name: Joi.string().min(3).max(100).required(),
+  })
+  return schema.validate(course)
+}
 
 ///////////////////////////////////////////////////
 // SERVER
