@@ -1,13 +1,21 @@
 const express = require('express')
 const app = express()
+const Joi = require('joi')
 
-// data
+///////////////////////////////////////
+// Data
+///////////////////////////////////////
+
 const courses = [
   { id: 1, name: 'course 1' },
   { id: 2, name: 'course 2' },
   { id: 3, name: 'course 3' },
   { id: 4, name: 'course 4' },
 ]
+
+///////////////////////////////////////
+// Middleware & Routes Handlers
+///////////////////////////////////////
 
 app.use(express.json())
 
@@ -33,9 +41,23 @@ app.get('/api/courses/:id', (req, res) => {
   res.status(200).send(course)
 })
 
-// post request > test in postman
-// picture: postman_post-request
+// Create Course
 app.post('/api/courses', (req, res) => {
+  // 1.
+  const schema = Joi.object({
+    name: Joi.string().min(3).max(100).required(),
+  })
+
+  // 2.
+  const result = schema.validate(req.body)
+  console.log(result)
+
+  // 3. return message if there are any errors
+  if (result.error) {
+    const { message } = result.error.details[0]
+    return res.status(400).send(message)
+  }
+
   const course = {
     id: courses.length + 1,
     name: req.body.name,
