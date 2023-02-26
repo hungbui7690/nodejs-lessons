@@ -9,6 +9,8 @@ const courses = [
   { id: 4, name: 'course 4' },
 ]
 
+app.use(express.json())
+
 app.get('/', (req, res) => {
   res.send('Hello World')
 })
@@ -31,11 +33,21 @@ app.get('/api/courses/:id', (req, res) => {
   res.status(200).send(course)
 })
 
-app.get('/api/posts/:year/:month', (req, res) => {
-  const params = req.params
-  const query = req.query
-  res.send({ params, query })
+// post request > test in postman
+// picture: postman_post-request
+app.post('/api/courses', (req, res) => {
+  const course = {
+    id: courses.length + 1,
+    name: req.body.name,
+  }
+
+  courses.push(course)
+  res.status(201).send(course)
 })
+
+///////////////////////////////////////////////////
+// SERVER
+///////////////////////////////////////////////////
 
 // setup port in env > export PORT=5000
 const port = process.env.PORT || 3000
