@@ -59,7 +59,7 @@ app.post('/api/courses', (req, res) => {
   res.status(201).send(course)
 })
 
-// Handling PUT request
+// Update Course
 app.put('/api/courses/:id', (req, res) => {
   const courseID = req.params.id
   const course = courses.find((c) => c.id === Number(courseID))
@@ -76,6 +76,21 @@ app.put('/api/courses/:id', (req, res) => {
 
   course.name = req.body.name
   res.send(course)
+})
+
+// Handling DELETE request > does not need req.body
+app.delete('/api/courses/:id', (req, res) => {
+  const courseID = req.params.id
+  const course = courses.find((c) => c.id === Number(courseID))
+  if (!course)
+    return res
+      .status(400)
+      .send(`The course with the ID ${courseID} does not exist`)
+
+  const index = courses.indexOf(course)
+  courses.slice(index, 1)
+
+  res.status(200).send(course)
 })
 
 function validateCourse(course) {
