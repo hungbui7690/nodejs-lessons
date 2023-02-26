@@ -28,14 +28,14 @@ app.use(express.static('public'))
 app.use(helmet())
 app.use(morgan('tiny'))
 
+console.log(`Environment : ${config.get('name')}`)
 /////////////////////////////////////////
 // === Config ===
-// base on NODE_ENV, it will use config in different config files > if in default NODE_ENV > will use data in default.json > if that config does not exist in default.json, then it will check the other 2 files
-// export NODE_ENV=production
-// export NODE_ENV=   >   reset to default env
+// file name must be correct: custom-environment-variables.json
+// > export NODE_ENV=production
+// > export app_password=12345
 /////////////////////////////////////////
-console.log(`Application Name : ${config.get('name')}`)
-console.log(`Host : ${config.get('Customer.dbConfig.host')}`)
+console.log(`Password : ${config.get('mail.password')}`)
 
 app.use(logger)
 app.use((req, res, next) => {
