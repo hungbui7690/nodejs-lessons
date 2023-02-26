@@ -3,6 +3,7 @@ const app = express()
 const Joi = require('joi')
 const helmet = require('helmet')
 const morgan = require('morgan')
+const config = require('config')
 
 const logger = require('./logger')
 
@@ -24,14 +25,17 @@ const courses = [
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(express.static('public'))
-
 app.use(helmet())
+app.use(morgan('tiny'))
 
+/////////////////////////////////////////
+// === Config ===
+// base on NODE_ENV, it will use config in different config files > if in default NODE_ENV > will use data in default.json > if that config does not exist in default.json, then it will check the other 2 files
 // export NODE_ENV=production
-if (app.get('env') === 'development') {
-  app.use(morgan('tiny'))
-  console.log('Morgan enabled...')
-}
+// export NODE_ENV=   >   reset to default env
+/////////////////////////////////////////
+console.log(`Application Name : ${config.get('name')}`)
+console.log(`Host : ${config.get('Customer.dbConfig.host')}`)
 
 app.use(logger)
 app.use((req, res, next) => {

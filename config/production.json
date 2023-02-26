@@ -1,0 +1,11 @@
+{
+  "name": "My Express App - Production",
+  "Customer": {
+    "dbConfig": {
+      "host": "prod-db-server"
+    },
+    "credit": {
+      "initialDays": 30
+    }
+  }
+}
