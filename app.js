@@ -1,22 +1,36 @@
 const express = require('express')
 const app = express()
 
+// data
+const courses = [
+  { id: 1, name: 'course 1' },
+  { id: 2, name: 'course 2' },
+  { id: 3, name: 'course 3' },
+  { id: 4, name: 'course 4' },
+]
+
 app.get('/', (req, res) => {
   res.send('Hello World')
 })
 
-app.get('/api/course', (req, res) => {
-  res.send([1, 2, 3])
+// Get All Courses
+app.get('/api/courses', (req, res) => {
+  res.send(courses)
 })
 
-// req.params
-app.get('/api/course/:id', (req, res) => {
-  const params = req.params
-  res.send(params)
+// Get Course by ID
+app.get('/api/courses/:id', (req, res) => {
+  const courseID = req.params.id
+
+  const course = courses.find((c) => c.id === Number(courseID))
+  if (!course)
+    return res
+      .status(404)
+      .send(`The course with the ID ${courseID} does not exist`)
+
+  res.status(200).send(course)
 })
 
-// multi params
-// req.query > /api/posts/2022/12/?name=joe&age=25
 app.get('/api/posts/:year/:month', (req, res) => {
   const params = req.params
   const query = req.query
