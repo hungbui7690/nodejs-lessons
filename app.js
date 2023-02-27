@@ -55,14 +55,20 @@ async function getCourse() {
   console.log(courses)
 }
 
+// This method is used when we want to update directly from database > without checking
 async function updateCourse(id) {
-  const course = await Course.findOne({ _id: id })
-  if (!course) return
+  const result = await Course.updateOne(
+    {
+      _id: id,
+    },
+    {
+      $set: {
+        author: 'Bill Malone',
+        isPublished: true,
+      },
+    }
+  )
 
-  course.author = 'Daniel'
-  course.isPublished = true
-
-  const result = await course.save()
   console.log(result)
 }
 
