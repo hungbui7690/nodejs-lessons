@@ -1,9 +1,9 @@
-// (***) Parallel Promise >
+// (***) Parallel Promise: both run at "almost" the same time > because of single thread
 
 const p1 = new Promise((resolve, reject) => {
   setTimeout(() => {
     console.log('Async Operation 1...')
-    resolve(1)
+    reject(new Error('Error in Promise 1...'))
   }, 2000)
 })
 
@@ -14,5 +14,7 @@ const p2 = new Promise((resolve, reject) => {
   }, 2000)
 })
 
-// results is the combination of p1 & p2 > array
-Promise.all([p1, p2]).then((results) => console.log(results))
+// either one failed > consider rejected
+Promise.all([p1, p2])
+  .then((results) => console.log(results))
+  .catch((err) => console.log(err))
