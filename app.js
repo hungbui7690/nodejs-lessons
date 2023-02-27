@@ -1,4 +1,4 @@
-// *** Settled Promises > check file promise.js
+// *** Parallel Promise > check file promise.js
 
 console.log('Before')
 
