@@ -44,16 +44,11 @@ async function createCourse() {
   })
   await course.save()
 }
-// createCourse()
 
+// ======================================
+// Regular Expression
 async function getCourse() {
-  const courses = await Course.find({})
-    .and([{ $or: [{ price: 12 }, { price: 18 }] }, { name: 'Python' }])
-    .select({
-      name: 1,
-      author: 1,
-      price: 1,
-    }) // select fields we want
+  const courses = await Course.find({ author: /doe/i }).count()
 
   console.log(courses)
 }
