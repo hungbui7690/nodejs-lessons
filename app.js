@@ -1,22 +1,66 @@
-const express = require('express')
-const app = express()
-const Joi = require('joi')
+// Exercise: write the below code in Async/Await
 
-const genres = require('./routes/genres')
+/////////////////////////////////////////////////
+// CREATE PROMISES
+/////////////////////////////////////////////////
 
-///////////////////////////////////////
-// Middleware & Routes Handlers
-///////////////////////////////////////
+// (1) convert from callback to promise
+function getCustomer(id) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve({
+        id: 1,
+        name: 'Joe Doe',
+        isGold: true,
+        email: 'joe@gmail.com',
+      })
+    }, 2000)
+  })
+}
 
-app.use(express.json())
+function getTopMovies() {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve(['movie1', 'movie2'])
+    }, 2000)
+  })
+}
 
-app.use(genres)
+function sendEmail(email, movies) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve()
+    }, 4000)
+  })
+}
 
-///////////////////////////////////////////////////
-// SERVER
-///////////////////////////////////////////////////
+/////////////////////////////////////////////////
+// CONSUME PROMISE
+/////////////////////////////////////////////////
 
-// setup port in env > export PORT=5000
-const port = process.env.PORT || 3000
+getCustomer(1, (customer) => {
+  console.log('Customer: ', customer)
+  if (customer.isGold) {
+    getTopMovies((movie) => {
+      console.log('Top Movies: ', movie)
+      sendEmail(customer.email, movie, () => {
+        console.log('Email sent...')
+      })
+    })
+  }
+})
 
-app.listen(3000, () => console.log(`Listening on port ${port}...`))
+// (2)
+async function notifyCustomer() {
+  const customer = await getCustomer(1)
+  console.log(customer)
+  if (customer.isGold) {
+    const movie = await getTopMovies()
+    console.log(movie)
+    await sendEmail(customer.email, movie)
+    console.log('Email sent...')
+  }
+}
+
+// (3)
+notifyCustomer()
