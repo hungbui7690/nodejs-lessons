@@ -55,6 +55,19 @@ async function getCourse() {
   console.log(courses)
 }
 
+async function updateCourse(id) {
+  const course = await Course.findOne({ _id: id })
+  if (!course) return
+
+  course.author = 'Daniel'
+  course.isPublished = true
+
+  const result = await course.save()
+  console.log(result)
+}
+
+updateCourse('63fc86f983252a5d8d9e2130')
+
 ////////////////////////////////////////////////
 // SERVER
 ////////////////////////////////////////////////
