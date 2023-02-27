@@ -1,18 +1,16 @@
-// *** Parallel Promise > check file promise.js
+// *** Async/Await
 
 console.log('Before')
 
-// (***) need to have return keyword when using code block { } > otherwise, error
-getUser(1)
-  .then((user) => getRepositories(user.githubUser))
-  .then((repo) => {
-    console.log(repo)
-    return getCommits(repo)
-  })
-  .then((commit) => console.log(commit))
-  .catch((err) => console.log(err))
-
+// (1) need to be in function, because we have to "async" keyword
+async function run() {
+  const user = await getUser(1)
+  console.log(user)
+}
 console.log('After')
+
+// (2)
+run()
 
 function getUser(id) {
   return new Promise((resolve, reject) => {
@@ -36,8 +34,8 @@ function getCommits(repo) {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       console.log('Getting Commits...')
-      // resolve(['commit 1', 'commit 2', 'commit 3', 'commit 4'])
-      reject(new Error('Something went wrong. Cannot get the commits ...'))
+      resolve(['commit 1', 'commit 2', 'commit 3', 'commit 4'])
+      // reject(new Error('Something went wrong. Cannot get the commits ...'))
     }, 2000)
   })
 }
