@@ -25,7 +25,18 @@ const courseSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-  isPublished: boolean,
+  isPublished: Boolean,
+})
+
+// model is similar to class > and Schema is similar to properties in Class
+const Course = mongoose.model('Course', courseSchema)
+
+// create instance from Course model
+const course = new Course({
+  name: 'NodeJS Course',
+  author: 'John Doe',
+  tags: ['node', 'backend'],
+  isPublished: true,
 })
 
 ////////////////////////////////////////////////
