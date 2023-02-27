@@ -1,4 +1,4 @@
-// *** Consume Promises
+// *** Settled Promises > check file promise.js
 
 console.log('Before')
 
