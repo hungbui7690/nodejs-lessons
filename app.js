@@ -69,7 +69,12 @@ async function updateCourse(id) {
   console.log(result)
 }
 
-updateCourse('63fc86f983252a5d8d9e2130')
+const deleteCourse = async (id) => {
+  const result = await Course.findOneAndDelete({ _id: id })
+  console.log(result)
+}
+
+deleteCourse('63fc86f983252a5d8d9e2130')
 
 ////////////////////////////////////////////////
 // SERVER
