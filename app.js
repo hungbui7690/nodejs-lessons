@@ -2,14 +2,13 @@ const express = require('express')
 const app = express()
 
 const mongoose = require('mongoose')
-const { boolean } = require('webidl-conversions')
-
 ////////////////////////////////////////////////
 // CONNECT TO MONGODB
 ////////////////////////////////////////////////
 
+// (***) need to use this instead of localhost
 mongoose
-  .connect('mongodb://localhost/playground')
+  .connect('mongodb://127.0.0.1:27017/playground')
   .then(() => console.log('Connected to MongoDB...'))
   .catch((err) => console.log(`Could not connect to MongoDB...`, err))
 
@@ -20,7 +19,7 @@ mongoose
 const courseSchema = new mongoose.Schema({
   name: String,
   author: String,
-  tags: [String], // array of string
+  tags: [String],
   date: {
     type: Date,
     default: Date.now,
@@ -28,15 +27,20 @@ const courseSchema = new mongoose.Schema({
   isPublished: Boolean,
 })
 const Course = mongoose.model('Course', courseSchema)
-const course = new Course({
-  name: 'NodeJS Course',
-  author: 'John Doe',
-  tags: ['node', 'backend'],
-  isPublished: true,
-})
 
-// (***) Save a Document to DB > but this won't work > since it is async function
-course.save()
+// (1) since .save() is async function > we need to use async/await
+async function createCourse() {
+  const course = new Course({
+    name: 'NodeJS Course',
+    author: 'John Doe',
+    tags: ['node', 'backend'],
+    isPublished: true,
+  })
+
+  await course.save()
+}
+
+createCourse()
 
 ////////////////////////////////////////////////
 // SERVER
