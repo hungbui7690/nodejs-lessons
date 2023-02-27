@@ -6,7 +6,9 @@ const mongoose = require('mongoose')
 // CONNECT TO MONGODB
 ////////////////////////////////////////////////
 
-// (***) need to use this instead of localhost
+mongoose.set('strictQuery', true)
+
+// (***) need to use 127.0.0.1 instead of localhost
 mongoose
   .connect('mongodb://127.0.0.1:27017/playground')
   .then(() => console.log('Connected to MongoDB...'))
@@ -28,19 +30,32 @@ const courseSchema = new mongoose.Schema({
 })
 const Course = mongoose.model('Course', courseSchema)
 
-// (1) since .save() is async function > we need to use async/await
+///////////////////////////////////////
+// Model methods
+///////////////////////////////////////
+
 async function createCourse() {
   const course = new Course({
-    name: 'NodeJS Course',
-    author: 'John Doe',
-    tags: ['node', 'backend'],
+    name: 'Angular Course',
+    author: 'Selena',
+    tags: ['angular', 'front-end'],
     isPublished: true,
   })
 
   await course.save()
 }
+// createCourse()
 
-createCourse()
+// (1)
+async function getCourse() {
+  // const courses = await Course.find()
+  const courses = await Course.find({ name: 'Angular Course' })
+
+  console.log(courses)
+}
+
+// (2)
+getCourse()
 
 ////////////////////////////////////////////////
 // SERVER
