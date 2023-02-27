@@ -1,17 +1,19 @@
-// with async function, we can not consume it like normal
-// there are 3 ways to consume an async function:
-// - callback
-// - promise
-// - async/await
+// Using Callback
 
 console.log('Before')
-const user = getUser(1)
-console.log(user)
+
+// 3. use callback here
+getUser(1, (user) => {
+  console.log(user)
+  // Ex: after having user, we want to get all the repos of that user
+})
 console.log('After')
 
-function getUser(id) {
+// 1. Add param "callback"
+// 2. Change return to callback()
+function getUser(id, callback) {
   setTimeout(() => {
     console.log('Reading a User from database...')
-    return { id, githubUser: 'Joe' }
+    callback({ id, githubUser: 'Joe' })
   })
 }
