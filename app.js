@@ -45,11 +45,6 @@ async function createCourse() {
   await course.save()
 }
 
-// ======================================
-// PAGINATION
-// /api/courses/?pageNumber=2&pageSize=10 > 21-30
-// skip = 2 * 10, limit = 10
-// but page starts at 0 > skip = (pageNumber - 1) * pageSize
 async function getCourse() {
   const pageSize = 10
   const pageNumber = 2
@@ -59,7 +54,6 @@ async function getCourse() {
 
   console.log(courses)
 }
-getCourse()
 
 ////////////////////////////////////////////////
 // SERVER
