@@ -17,17 +17,22 @@ const schema = new mongoose.Schema({
 })
 const Course = mongoose.model('Course', schema)
 
-// Exercise 2:
-// Get all the published frontend and backend courses, sort them by their price in a descending order, pick only their name and author, and display them
+// Exercise 3:
+// Get all the published courses that are $15 or more, or have the word 'by' in their title
 
 const getCourses = async () => {
   const courses = await Course.find({
     isPublished: true,
-    tags: {
-      $in: ['frontend', 'backend'],
-    },
   })
-    .select({ name: 1, author: 1 })
+    .or([
+      {
+        price: {
+          $gte: 15,
+        },
+      },
+      { name: /.*by.*/i },
+    ])
+    .select({ name: 1, author: 1, price: 1, isPublished: 1 })
     .sort({ price: -1 })
 
   return courses
