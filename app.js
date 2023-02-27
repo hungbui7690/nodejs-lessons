@@ -46,22 +46,14 @@ async function createCourse() {
 }
 // createCourse()
 
-//////////////////////////////////////////////////////////
-/*
-  (***) Run this in Studio 3T
-
-  db.getCollection("courses").insertMany([
-    {name: "React", author: "John Doe", price: 10, tags: ["react", "frontend"], isPublished: true},
-    {name: "NodeJS", author: "Ken Gold", price: 7.99, tags: ["node", "backend"], isPublished: true},
-    {name: "Angular", author: "Doe Doe", price: 12, tags: ["angular", "frontend"], isPublished: false},
-    {name: "Python", author: "Peter Pan", price: 18, tags: ["python", "backend"], isPublished: true},
-  ])  
-*/
-
 async function getCourse() {
-  const courses = await Course.find({
-    $or: [{ author: 'Selena' }, { isPublished: false }],
-  }).select({ name: 1, author: 1, isPublished: 1 }) // select fields we want
+  const courses = await Course.find({})
+    .and([{ $or: [{ price: 12 }, { price: 18 }] }, { name: 'Python' }])
+    .select({
+      name: 1,
+      author: 1,
+      price: 1,
+    }) // select fields we want
 
   console.log(courses)
 }
