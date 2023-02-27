@@ -47,7 +47,6 @@ async function createCourse() {
 // createCourse()
 
 //////////////////////////////////////////////////////////
-// COMPARISON QUERY OPERATORS
 /*
   (***) Run this in Studio 3T
 
@@ -61,9 +60,8 @@ async function createCourse() {
 
 async function getCourse() {
   const courses = await Course.find({
-    // price: { $gte: 10, $lt: 16 },
-    price: { $in: [7.99, 12] },
-  }).select({ name: 1, price: 1 }) // select fields we want
+    $or: [{ author: 'Selena' }, { isPublished: false }],
+  }).select({ name: 1, author: 1, isPublished: 1 }) // select fields we want
 
   console.log(courses)
 }
