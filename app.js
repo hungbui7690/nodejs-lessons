@@ -1,46 +1,36 @@
-// *** Async/Await
+// Exercise: write the below code in Async/Await
 
-console.log('Before')
-
-// (***) use try/catch to catch error
-async function run() {
-  try {
-    const user = await getUser(1)
-    const repos = await getRepositories(user)
-    const commits = await getCommits(repos)
-    console.log(commits)
-  } catch (error) {
-    console.log(error)
+getCustomer(1, (customer) => {
+  console.log('Customer: ', customer)
+  if (customer.isGold) {
+    getTopMovies((movie) => {
+      console.log('Top Movies: ', movie)
+      sendEmail(customer.email, movie, () => {
+        console.log('Email sent...')
+      })
+    })
   }
-}
-console.log('After')
+})
 
-run()
-
-function getUser(id) {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      console.log('Reading a User from database...')
-      resolve({ id, githubUser: 'Joe' })
-    }, 2000)
-  })
-}
-
-function getRepositories(user) {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      console.log('Getting Repositories...')
-      resolve(['repo1', 'repo2', 'repo3'])
-    }, 2000)
-  })
+function getCustomer(id, callback) {
+  setTimeout(() => {
+    callback({
+      id: 1,
+      name: 'Joe Doe',
+      isGold: true,
+      email: 'joe@gmail.com',
+    })
+  }, 2000)
 }
 
-function getCommits(repo) {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      console.log('Getting Commits...')
-      // resolve(['commit 1', 'commit 2', 'commit 3', 'commit 4'])
-      reject(new Error('Something went wrong. Cannot get the commits ...'))
-    }, 2000)
-  })
+function getTopMovies(callback) {
+  setTimeout(() => {
+    callback(['movie1', ['movie2']])
+  }, 2000)
+}
+
+function sendEmail(email, movies, callback) {
+  setTimeout(() => {
+    callback()
+  }, 4000)
 }
