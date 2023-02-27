@@ -46,9 +46,16 @@ async function createCourse() {
 }
 
 // ======================================
-// Regular Expression
+// PAGINATION
+// /api/courses/?pageNumber=2&pageSize=10 > 21-30
+// skip = 2 * 10, limit = 10
+// but page starts at 0 > skip = (pageNumber - 1) * pageSize
 async function getCourse() {
-  const courses = await Course.find({ author: /doe/i }).count()
+  const pageSize = 10
+  const pageNumber = 2
+  const courses = await Course.find({ author: /doe/i })
+    .skip(pageNumber - 1 * pageSize)
+    .limit(pageSize)
 
   console.log(courses)
 }
