@@ -8,7 +8,6 @@ const mongoose = require('mongoose')
 
 mongoose.set('strictQuery', true)
 
-// (***) need to use 127.0.0.1 instead of localhost
 mongoose
   .connect('mongodb://127.0.0.1:27017/playground')
   .then(() => console.log('Connected to MongoDB...'))
@@ -36,9 +35,9 @@ const Course = mongoose.model('Course', courseSchema)
 
 async function createCourse() {
   const course = new Course({
-    name: 'Angular Course',
+    name: 'React Course',
     author: 'Selena',
-    tags: ['angular', 'front-end'],
+    tags: ['react', 'front-end'],
     isPublished: true,
   })
 
@@ -46,15 +45,15 @@ async function createCourse() {
 }
 // createCourse()
 
-// (1)
 async function getCourse() {
-  // const courses = await Course.find()
-  const courses = await Course.find({ name: 'Angular Course' })
+  const courses = await Course.find({ author: 'Selena' })
+    .limit(3)
+    .sort({ name: -1 }) // sort reverse
+    .select({ name: 1, tags: 1 }) // select fields we want
 
   console.log(courses)
 }
 
-// (2)
 getCourse()
 
 ////////////////////////////////////////////////
