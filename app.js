@@ -1,18 +1,17 @@
-// To solve Callback Hell when consuming Async Functions, there are 3 ways:
-// a. Named Function
-// b. Promise
-// c. Async/Await
+// *** Named Function
 
 console.log('Before')
 getUser(1, (user) => {
-  getRepositories(user, (repo) => {
-    // 2. pass the reference here
-    getCommits(repo, displayCommit)
-  })
+  // 2.
+  getRepositories(user, getAllCommits)
 })
 console.log('After')
 
 // 1.
+const getAllCommits = (repo) => {
+  getCommits(repo, displayCommit)
+}
+
 function displayCommit(commit) {
   console.log(commit)
 }
