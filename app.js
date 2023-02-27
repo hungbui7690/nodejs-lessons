@@ -1,14 +1,18 @@
 // *** Named Function
 
 console.log('Before')
-getUser(1, (user) => {
-  // 2.
-  getRepositories(user, getAllCommits)
-})
+
+// 3.
+getUser(1, getAllRepos)
 console.log('After')
 
-// 1.
-const getAllCommits = (repo) => {
+// 2.
+function getAllRepos(user) {
+  getRepositories(user, getAllCommits)
+}
+
+// 1. don't use arrow function > hoisting
+function getAllCommits(repo) {
   getCommits(repo, displayCommit)
 }
 
