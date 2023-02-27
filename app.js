@@ -1,42 +1,46 @@
-// *** Named Function
+// *** Replace Callbacks with Promises
 
 console.log('Before')
 
-// 3.
-getUser(1, getAllRepos)
+// (4) we can see that, it does not work here > to consume promise, we need to use .then() & .catch
+getUser(1, (user) => {
+  getRepositories(user, (repo) => {
+    getCommits(repo, (commit) => {
+      console.log(commit)
+    })
+  })
+})
 console.log('After')
 
-// 2.
-function getAllRepos(user) {
-  getRepositories(user, getAllCommits)
+// (1)
+function getUser(id) {
+  // [a] return Promise + remove callback param
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      console.log('Reading a User from database...')
+
+      // [b] change to resolve()
+      resolve({ id, githubUser: 'Joe' })
+    }, 2000)
+  })
 }
 
-// 1. don't use arrow function > hoisting
-function getAllCommits(repo) {
-  getCommits(repo, displayCommit)
+// (2) do similar to getUser
+function getRepositories(user) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      console.log('Getting Repositories...')
+      resolve(['repo1', 'repo2', 'repo3'])
+    }, 2000)
+  })
 }
 
-function displayCommit(commit) {
-  console.log(commit)
-}
-
-function getUser(id, callback) {
-  setTimeout(() => {
-    console.log('Reading a User from database...')
-    callback({ id, githubUser: 'Joe' })
-  }, 2000)
-}
-
-function getRepositories(user, callback) {
-  setTimeout(() => {
-    console.log('Getting Repositories...')
-    callback(['repo1', 'repo2', 'repo3'])
-  }, 2000)
-}
-
-function getCommits(repo, callback) {
-  setTimeout(() => {
-    console.log('Getting Commits...')
-    callback(['commit 1', 'commit 2', 'commit 3', 'commit 4'])
-  }, 2000)
+// (3) do similar to getUser
+function getCommits(repo) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      console.log('Getting Commits...')
+      resolve(['commit 1', 'commit 2', 'commit 3', 'commit 4'])
+    }, 2000)
+  })
 }
