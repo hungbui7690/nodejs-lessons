@@ -1,37 +1,9 @@
-// TRANSFORM: special type of Duplex > can modify data
-// (1)
-const { Transform } = require('stream')
+// HTTP STREAM
 
-// (2) hello -> xxxxx
-class ReplaceText extends Transform {
-  constructor(char) {
-    super()
-    this.replaceChar = char
-  }
+const { createServer } = require('http')
+const { createReadStream } = require('fs')
+const file = './Funny Cat.mp4'
 
-  // (***) similar to _write()
-  _transform(chunk, encoding, callback) {
-    const transformChunk = chunk
-      .toString()
-      .replace(/[a-z]|[A-Z]|[0-9]/g, this.replaceChar)
-    this.push(transformChunk)
-    callback()
-  }
-
-  // (***) add more to to write stream
-  _flush(callback) {
-    this.push('more stuff is being passed through')
-  }
-}
-
-const xStream = new ReplaceText('x')
-
-// process.stdout = console
-process.stdin.pipe(xStream).pipe(process.stdout)
-
-/*
-  There are a lot of transform stream out there
-  - zlib: get the data, compress, and transform to write stream 
-  - crypto: get data, then encrypt 
-  ...
-*/
+createServer((req, res) => {}).listen(3000, () =>
+  console.log('Server is Running on Port 3000...')
+)
