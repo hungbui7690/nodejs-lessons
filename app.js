@@ -1,6 +1,8 @@
 const fs = require('fs')
 const readStream = fs.createReadStream('./Funny Cat.mp4')
 
+// Convert to non-flowing stream
+// (1)
 readStream.on('data', (chunk) => {
   console.log(`> Little Chunk ${chunk.length} : `, chunk)
 })
@@ -11,4 +13,13 @@ readStream.on('end', () => {
 
 readStream.on('error', (err) => {
   console.log('An Error has Occurred', err)
+})
+
+// (2)
+readStream.pause()
+
+// (3)
+process.stdin.on('data', (chunk) => {
+  if (chunk.toString().trim() === 'q') readStream.resume()
+  readStream.read()
 })
