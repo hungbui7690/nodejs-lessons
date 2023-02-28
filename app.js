@@ -1,39 +1,37 @@
-// PIPE, DUPLEX & TRANSFORM STREAMS
-// DUPLEX
+// TRANSFORM: special type of Duplex > can modify data
+// (1)
+const { Transform } = require('stream')
 
-// (1) get Duplex
-const { PassThrough, Duplex } = require('stream')
-const { createReadStream, createWriteStream } = require('fs')
-const readStream = createReadStream('./Funny Cat.mp4')
-const writeStream = createWriteStream('./copy.mp4')
-
-const report = new PassThrough()
-
-// (2) Duplex has _read(), _write(), _final
-class Throttle extends Duplex {
-  constructor(ms) {
+// (2) hello -> xxxxx
+class ReplaceText extends Transform {
+  constructor(char) {
     super()
-    this.delay = ms
+    this.replaceChar = char
   }
 
-  _read() {}
-  _write(chunk, encoding, callback) {
-    this.push(chunk)
-    setTimeout(callback, this.delay)
+  // (***) similar to _write()
+  _transform(chunk, encoding, callback) {
+    const transformChunk = chunk
+      .toString()
+      .replace(/[a-z]|[A-Z]|[0-9]/g, this.replaceChar)
+    this.push(transformChunk)
+    callback()
   }
-  _final() {
-    this.push(null)
+
+  // (***) add more to to write stream
+  _flush(callback) {
+    this.push('more stuff is being passed through')
   }
 }
 
-// (3)
-const throttle = new Throttle(100)
+const xStream = new ReplaceText('x')
 
-let total = 0
-report.on('data', (chunk) => {
-  total += chunk.length
-  console.log('bytes : ', total)
-})
+// process.stdout = console
+process.stdin.pipe(xStream).pipe(process.stdout)
 
-// (4)
-readStream.pipe(throttle).pipe(report).pipe(writeStream)
+/*
+  There are a lot of transform stream out there
+  - zlib: get the data, compress, and transform to write stream 
+  - crypto: get data, then encrypt 
+  ...
+*/
