@@ -10,17 +10,21 @@ const funnies = [
   'I walk around like everything’s fine, but deep down, inside my shoe, my sock is sliding off.',
 ]
 
+// (***) This is bts
 class StreamFromArray extends Readable {
   constructor(array) {
-    super({ encoding: 'utf-8' }) // convert buffer to string
+    super({ objectMode: true }) // object mode
     this.array = array
     this.index = 0
   }
 
-  // binary mode
+  // object mode
   _read() {
     if (this.index <= this.array.length) {
-      const chunk = this.array[this.index]
+      const chunk = {
+        data: this.array[this.index],
+        index: this.index,
+      }
       // push chunk into pipeline
       this.push(chunk)
       this.index++
