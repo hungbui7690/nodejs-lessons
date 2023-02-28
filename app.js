@@ -1,8 +1,23 @@
 // PIPE, DUPLEX & TRANSFORM STREAMS
-const { createWriteStream } = require('fs')
-const writeStream = createWriteStream('./test.txt')
+// DUPLEX
 
-// from input to file
-// echo "hello world" | node .\app.js
-// cat .\app.js | node .\app.js
-process.stdin.pipe(writeStream)
+// (1) PassThough = most basic of duplex stream
+const { PassThrough } = require('stream')
+
+const { createReadStream, createWriteStream } = require('fs')
+const readStream = createReadStream('./Funny Cat.mp4')
+const writeStream = createWriteStream('./copy.mp4')
+
+// (2)
+const report = new PassThrough()
+
+// (4)
+let total = 0
+report.on('data', (chunk) => {
+  total += chunk.length
+  console.log('bytes : ', total)
+})
+
+// (3) duplex: can be put in between readable and writable
+// > can read data from read stream, and send data to write stream
+readStream.pipe(report).pipe(writeStream)
