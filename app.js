@@ -1,23 +1,39 @@
 // PIPE, DUPLEX & TRANSFORM STREAMS
 // DUPLEX
 
-// (1) PassThough = most basic of duplex stream
-const { PassThrough } = require('stream')
-
+// (1) get Duplex
+const { PassThrough, Duplex } = require('stream')
 const { createReadStream, createWriteStream } = require('fs')
 const readStream = createReadStream('./Funny Cat.mp4')
 const writeStream = createWriteStream('./copy.mp4')
 
-// (2)
 const report = new PassThrough()
 
-// (4)
+// (2) Duplex has _read(), _write(), _final
+class Throttle extends Duplex {
+  constructor(ms) {
+    super()
+    this.delay = ms
+  }
+
+  _read() {}
+  _write(chunk, encoding, callback) {
+    this.push(chunk)
+    setTimeout(callback, this.delay)
+  }
+  _final() {
+    this.push(null)
+  }
+}
+
+// (3)
+const throttle = new Throttle(100)
+
 let total = 0
 report.on('data', (chunk) => {
   total += chunk.length
   console.log('bytes : ', total)
 })
 
-// (3) duplex: can be put in between readable and writable
-// > can read data from read stream, and send data to write stream
-readStream.pipe(report).pipe(writeStream)
+// (4)
+readStream.pipe(throttle).pipe(report).pipe(writeStream)
