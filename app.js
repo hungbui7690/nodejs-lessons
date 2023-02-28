@@ -1,25 +1,20 @@
-const fs = require('fs')
-const readStream = fs.createReadStream('./Funny Cat.mp4')
+// WRITABLE STREAM:
+// everywhere:
+// - http req, res
+// - write data to file system...
+// - log, error...
 
-// Convert to non-flowing stream
-// (1)
+const { createReadStream } = require('fs')
+const readStream = createReadStream('./Funny Cat.mp4')
+
 readStream.on('data', (chunk) => {
   console.log(`> Little Chunk ${chunk.length} : `, chunk)
-})
-
-readStream.on('end', () => {
-  console.log('[][] Read Stream Ended')
 })
 
 readStream.on('error', (err) => {
   console.log('An Error has Occurred', err)
 })
 
-// (2)
-readStream.pause()
-
-// (3)
-process.stdin.on('data', (chunk) => {
-  if (chunk.toString().trim() === 'q') readStream.resume()
-  readStream.read()
+readStream.on('end', () => {
+  console.log('[][] Read Stream Ended')
 })
