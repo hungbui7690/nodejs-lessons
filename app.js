@@ -1,14 +1,15 @@
 // WRITABLE STREAM:
-// everywhere:
-// - http req, res
-// - write data to file system...
-// - log, error...
 
-const { createReadStream } = require('fs')
+// (1)
+const { createReadStream, createWriteStream } = require('fs')
 const readStream = createReadStream('./Funny Cat.mp4')
 
+// (2)
+const writeStream = createWriteStream('./copy.mp4')
+
 readStream.on('data', (chunk) => {
-  console.log(`> Little Chunk ${chunk.length} : `, chunk)
+  // (3)
+  writeStream.write(chunk)
 })
 
 readStream.on('error', (err) => {
@@ -16,5 +17,11 @@ readStream.on('error', (err) => {
 })
 
 readStream.on('end', () => {
-  console.log('[][] Read Stream Ended')
+  // (4)
+  writeStream.end()
+})
+
+// (5)
+writeStream.on('close', () => {
+  process.stdout.write('file copied \n')
 })
