@@ -12,11 +12,12 @@ const funnies = [
 
 class StreamFromArray extends Readable {
   constructor(array) {
-    super()
+    super({ encoding: 'utf-8' }) // convert buffer to string
     this.array = array
     this.index = 0
   }
 
+  // binary mode
   _read() {
     if (this.index <= this.array.length) {
       const chunk = this.array[this.index]
