@@ -1,7 +1,0 @@
-// PIPE, DUPLEX & TRANSFORM STREAMS
-const { createWriteStream } = require('fs')
-const writeStream = createWriteStream('./test.txt')
-
-// from input to file
-// similar to : echo "hello world" > ./test.txt
-process.stdin.pipe(writeStream)

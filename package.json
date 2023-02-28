@@ -53,6 +53,7 @@
     "mpath": "^0.9.0",
     "mquery": "^4.0.3",
     "ms": "^2.0.0",
+    "multiparty": "^4.2.3",
     "negotiator": "^0.6.3",
     "object-inspect": "^1.12.3",
     "on-finished": "^2.4.1",

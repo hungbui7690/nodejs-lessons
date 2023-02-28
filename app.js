@@ -1,15 +1,20 @@
 // HTTP STREAM
+// (***) to fix this problem, we need to use 3rd party package
+// > npm i multiparty
 
 const express = require('express')
 const app = express()
 const { stat, createReadStream, createWriteStream } = require('fs')
 const { promisify } = require('util')
+
+// (1)
+const multiparty = require('multiparty')
+
 const file = './Funny Cat.mp4'
 const fileInfo = promisify(stat)
 
 app.use(express.urlencoded({ extended: false }))
 
-// (1)
 const sendVideo = async (req, res) => {
   const { size } = await fileInfo(file)
   const range = req.headers.range
@@ -35,22 +40,29 @@ const sendVideo = async (req, res) => {
   }
 }
 
-// (2)
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '\\index.html')
 })
 
-// (3)
 app.get('/video', (req, res) => {
   sendVideo(req, res)
 })
 
-// (4) handle form submission
-// (***) problem: always show ------WebKitFormBoundaryOsqd4Qva6NQFMI5B--
+// (2)
 app.post('/', (req, res) => {
-  req.pipe(res) // display in browser
-  req.pipe(process.stdout) // display in console
-  req.pipe(createWriteStream('./uploaded.txt')) // save file
+  let form = new multiparty.Form()
+
+  form.on('part', (part) => {
+    // console.log(part)
+    part.pipe(createWriteStream(`./copy/${part.file}`)).on('close', () => {
+      res.writeHead(200, {
+        'Content-Type': 'text/html',
+      })
+      res.end(`<h1>File Uploaded: ${part.filename}</h1>`)
+    })
+  })
+
+  form.parse(req)
 })
 
 app.listen(3000, () => console.log('Server is Running on Port 3000...'))
