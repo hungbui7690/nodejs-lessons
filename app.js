@@ -1,16 +1,26 @@
 // HTTP STREAM
 
 const http = require('http')
-const { createReadStream } = require('fs')
+
+// (1)
+const { stat, createReadStream } = require('fs')
+const { promisify } = require('util')
+
 const file = './Funny Cat.mp4'
 
-const server = http.createServer((req, res) => {
-  // (1)
+// (2)
+const fileInfo = promisify(stat)
+
+const server = http.createServer(async (req, res) => {
+  // (3)
+  const { size } = await fileInfo(file)
+
+  // (4) we can send this info to browser > check network tab
   res.writeHead(200, {
     'Content-Type': 'video/mp4',
+    'Content-Length': size,
   })
 
-  // (2)
   createReadStream(file).pipe(res)
 })
 
